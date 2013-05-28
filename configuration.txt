@@ -1,0 +1,5 @@
+# define the default timezone here
+tz:+1
+# define your secrets, one per line, in the form
+# name:secret
+fake:pskfb2vhfiegni2h
