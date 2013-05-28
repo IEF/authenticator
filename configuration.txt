@@ -2,4 +2,8 @@
 tz:+1
 # define your secrets, one per line, in the form
 # name:secret
+# for battle.net the name must be battle
+# and the key is in the form of a 40 character hex string.
 fake:pskfb2vhfiegni2h
+battle:0123456789012345678901234567890123456789
+

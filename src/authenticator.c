@@ -8,15 +8,12 @@
 // defined in editTzone.c
 extern void showEditTimeZone();
 
-// Truncate n decimal digits to 2^n for 6 digits
-#define DIGITS_TRUNCATE 1000000
-
 #define SHA1_SIZE 20
 
 #define MY_UUID { 0xA4, 0xA6, 0x13, 0xB5, 0x8A, 0x6B, 0x4F, 0xF0, 0xBD, 0x80, 0x00, 0x38, 0xA1, 0x51, 0xCD, 0x86 }
 PBL_APP_INFO(MY_UUID,
-		"Authenticator", "pokey9000/IEF/rigel314",
-		1, 1, /* App version */
+		"Authenticator", "pokey9000/IEF/rigel314/cwoac",
+		1, 3, /* App version */
 		RESOURCE_ID_IMAGE_MENU_ICON,
 		APP_INFO_STANDARD_APP);
 
@@ -61,14 +58,14 @@ void handle_second_tick(AppContextRef ctx, PebbleTickEvent *t) {
 	(void)t;
 	(void)ctx;
 
-	static char tokenText[] = "RYRYRY"; // Needs to be static because it's used by the system later.
+	static char tokenText[] = TOKEN_TEXT; // Needs to be static because it's used by the system later.
 
 	sha1nfo s;
 	uint8_t ofs;
 	uint32_t otp;
 	int i;
 	uint32_t unix_time;
-	char sha1_time[8] = {0, 0, 0, 0, 0, 0, 0, 0};
+	unsigned char sha1_time[8] = {0, 0, 0, 0, 0, 0, 0, 0};
 
 	PblTm curTime;
 	get_time(&curTime);
@@ -89,7 +86,7 @@ void handle_second_tick(AppContextRef ctx, PebbleTickEvent *t) {
 
 		// First get the HMAC hash of the time payload with the shared key
 		sha1_initHmac(&s, otpkeys[curToken], otpsizes[curToken]);
-		sha1_write(&s, sha1_time, 8);
+		sha1_write(&s, (const char *)sha1_time, 8);
 		sha1_resultHmac(&s);
 		
 		// Then do the HOTP truncation.  HOTP pulls its result from a 31-bit byte
@@ -104,11 +101,11 @@ void handle_second_tick(AppContextRef ctx, PebbleTickEvent *t) {
 		otp %= DIGITS_TRUNCATE;
 		
 		// Convert result into a string.  Sure wish we had working snprintf...
-		for(i = 0; i < 6; i++) {
-			tokenText[5-i] = 0x30 + (otp % 10);
+		for(i = 1; i <= otplengths[curToken]; i++) {
+			tokenText[otplengths[curToken]-i] = 0x30 + (otp % 10);
 			otp /= 10;
 		}
-		tokenText[6]=0;
+		tokenText[otplengths[curToken]]=0;
 
 		char *labelText = otplabels[curToken];
 
