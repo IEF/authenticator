@@ -10,6 +10,10 @@
 // current time zone offset
 #define TIME_ZONE_OFFSET +2
 
+// D.A. : handle DST changes via middle click
+int time_zone_offset = TIME_ZONE_OFFSET ;
+int tz_changed = 0 ;
+
 char otplabels[NUM_SECRETS][10] = {
     "account1","account2"
 };
@@ -38,6 +42,7 @@ PBL_APP_INFO(MY_UUID,
 
 Window window;
 
+TextLayer tz_label;
 TextLayer label;
 TextLayer token;
 TextLayer ticker;
@@ -260,7 +265,7 @@ uint32_t get_epoch_seconds() {
 // shamelessly stolen from WhyIsThisOpen's Unix Time source: http://forums.getpebble.com/discussion/4324/watch-face-unix-time
 	/* Convert time to seconds since epoch. */
     curSeconds=current_time.tm_sec;
-	unix_time = ((0-TIME_ZONE_OFFSET)*3600) + /* time zone offset */
+	unix_time = ((0-time_zone_offset)*3600) + /* time zone offset */
 		+ current_time.tm_sec /* start with seconds */
 		+ current_time.tm_min*60 /* add minutes */
 		+ current_time.tm_hour*3600 /* add hours */                                    + current_time.tm_yday*86400 /* add days */
@@ -270,6 +275,15 @@ uint32_t get_epoch_seconds() {
 }
 
 
+void int_to_string( int val, char *s, int size) {
+    // Convert result into a string.  Sure wish we had working snprintf...
+    int i ;
+	for(i = 0; i < size; i++) {
+		s[size-1-i] = 0x30 + (val % 10);
+		val /= 10;
+	}
+	s[size]=0;
+}
 
 void handle_second_tick(AppContextRef ctx, PebbleTickEvent *t) {
 
@@ -281,7 +295,6 @@ void handle_second_tick(AppContextRef ctx, PebbleTickEvent *t) {
 	sha1nfo s;
 	uint8_t ofs;
 	uint32_t otp;
-	int i;
 	uint32_t unix_time;
 	char sha1_time[8] = {0, 0, 0, 0, 0, 0, 0, 0};
 
@@ -310,12 +323,7 @@ void handle_second_tick(AppContextRef ctx, PebbleTickEvent *t) {
 		(s.state.b[ofs + 3] & 0xff);
 	otp %= DIGITS_TRUNCATE;
 	
-	// Convert result into a string.  Sure wish we had working snprintf...
-	for(i = 0; i < 6; i++) {
-		tokenText[5-i] = 0x30 + (otp % 10);
-		otp /= 10;
-	}
-	tokenText[6]=0;
+    int_to_string(otp, tokenText, 6);
 
     char *labelText = otplabels[curToken];
 
@@ -347,6 +355,43 @@ void down_single_click_handler(ClickRecognizerRef recognizer, Window *window) {
     };
 }
 
+// D.A : display Time Zone
+void set_tz_label() {
+    static char tz_text[]="!!!!!!";
+    int tz_digits;
+    
+    // add digits
+    tz_digits= (time_zone_offset < 0) ? -time_zone_offset : time_zone_offset ;
+    if (tz_digits < 0 || tz_digits > 99) {
+        text_layer_set_text(&tz_label, tz_text);
+        return ;
+    }
+    strcpy(tz_text, "GMT+") ;
+    
+    // change sign if needed
+    if (time_zone_offset < 0) tz_text[3]='-' ;
+    
+    int_to_string(tz_digits, &(tz_text[4]), 2) ;
+    
+    //display text
+    text_layer_set_text(&tz_label, tz_text);
+}
+
+// D.A : Handle select click : each click will toggle DST.
+void select_single_click_handler(ClickRecognizerRef recognizer, Window *window) {
+    
+    //toggle DST
+    if (tz_changed == 0) {
+        time_zone_offset -= 1;
+    } else {
+        time_zone_offset += 1;
+    }
+    tz_changed = 1 - tz_changed ;
+
+    //display text
+    set_tz_label();
+}
+
 void click_config_provider(ClickConfig **config, Window *window) {
   (void)window;
 
@@ -355,6 +400,10 @@ void click_config_provider(ClickConfig **config, Window *window) {
 
   config[BUTTON_ID_DOWN]->click.handler = (ClickHandler) down_single_click_handler;
   config[BUTTON_ID_DOWN]->click.repeat_interval_ms = 100;
+    
+    // D.A. : middle button handler
+    config[BUTTON_ID_SELECT]->click.handler = (ClickHandler) select_single_click_handler;
+    config[BUTTON_ID_SELECT]->click.repeat_interval_ms = 100;
 }
 
 void handle_init(AppContextRef ctx) {
@@ -363,6 +412,12 @@ void handle_init(AppContextRef ctx) {
 	window_init(&window, "auth");
 	window_stack_push(&window, true /* Animated */);
 	window_set_background_color(&window, GColorBlack);
+    
+    // D.A: Init the time offset label
+	text_layer_init(&tz_label, GRect(50, 5, 144-4 /* width */, 168-44 /* height */));
+	text_layer_set_text_color(&tz_label, GColorWhite);
+	text_layer_set_background_color(&tz_label, GColorClear);
+	text_layer_set_font(&tz_label, fonts_get_system_font(FONT_KEY_GOTHIC_18_BOLD));
 
     // Init the identifier label
     text_layer_init(&label, GRect(5, 30, 144-4, 168-44));
@@ -386,6 +441,8 @@ void handle_init(AppContextRef ctx) {
 	layer_add_child(&window.layer, &label.layer);
     layer_add_child(&window.layer, &token.layer);
     layer_add_child(&window.layer, &ticker.layer);
+    layer_add_child(&window.layer, &tz_label.layer);
+    set_tz_label() ;
 
     window_set_click_config_provider(&window, (ClickConfigProvider) click_config_provider);
 }
