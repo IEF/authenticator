@@ -4,6 +4,8 @@
 
 #include "configuration.h"
 
+// defined in editTzone.c
+extern void showEditTimeZone();
 
 // Truncate n decimal digits to 2^n for 6 digits
 #define DIGITS_TRUNCATE 1000000

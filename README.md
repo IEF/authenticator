@@ -1,43 +1,29 @@
 Authenticator
 =============
 
-Forked off 'authenticator' by IEF, which was forked off 'twostep' by pokey9000, this is Authenticator for Pebble,
-generating multiple Time-based One-Time Passwords, much like Google Authenticator.
+Forked off 'authenticator' by IEF, which was forked off 'twostep' by pokey9000, this is Authenticator for Pebble, with patches from rigel314 
 
-My changes include:
-* A runtime modifiable time zone, so you don't have to recompile the app on vacation.  I wish there was a way to make this change persist.
-* Making the screen immediatly change which account is displayed on the button press, rather than waiting until the next second tick.
+generating multiple Time-based One-Time Passwords, much like Google Authenticator.
 
 You can change the time zone with the select button.  Then hitting the back button, will resume the app.
 
-The same restrictions apply, you will have to recompile the application to include your
-TOTP secrets, name them, and include your timezone offset from GMT.
+To configure the application you need to edit the configuration.txt file
 
-To configure the application:
-This is easily done using oathtool on linux. For example:
+1. Set your timezone in configuration.txt - it's near the top, labelled 'tz'
 
-1. Let's say you have secret key AXIMZYJXITSIOIJVNXOE76PEJQ====== 
-(you might need to pad with = characters to 16 or 32 characters, if applicable)
+2. Let's say you have secret key AXIMZYJXITSIOIJVNXOE76PEJQ 
+On most sites, when setting up choose 'show key' when presented with the QR code.
 
-2. Run: oathtool --verbose --totp --base32 "AXIMZYJXITSIOIJVNXOE76PEJQ======" and copy the hex secret displayed.
+3. add it to the end of configuration.txt, following the example in the format 
+label:secret
 
-3. expand the hex string 05d0cce13744e48721356ddc4ff9e44c like so: { 0x05, 0xd0, 0xcc, 0xe1, 0x37... 0x4c }
+4. repeat this for all your keys (don't forget to remove the example)
 
-4. sed might help: echo 05d0cce13744e48721356ddc4ff9e44c|sed -re 's/(..)/0x\1, /g'
+5. Generate the config by running ./configuration.py
 
-5. Enter this new expanded string into configuration.h under the otpkeys variable.
+6. Build and install the application with ./waf build && python httpserver as usual
 
-6. Label the secret under otplabels.
-
-7. Enter the size of the secret (usually 10 for Google, 16 for others) under otpsizes.
-
-8. Don't forget to set your time zone.
-
-8. Build and install the application.
-
-9. Done, you can find 'Authenticator' in your app menu for your Pebble.
+7. Done, you can find 'Authenticator' in your app menu for your Pebble.
 
 The above is assuming you have the Pebble SDK installed and configured to compile watch apps.
 If not, review: http://developer.getpebble.com/1/01_GetStarted/01_Step_2
-
-
