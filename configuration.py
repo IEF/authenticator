@@ -28,7 +28,6 @@ def battle_decode ( code ):
   return key
 
 def genKeyLine( key_bytes ):
-  print key_bytes
   lengths.append( len(key_bytes) )
   key_hex = ["0x%02X" % x for x in key_bytes]
   return "{ " + ', '.join(key_hex) + " },"
@@ -40,11 +39,17 @@ for line in f:
   line = line.strip()
   if( line.startswith('#') or not ':' in line ): continue
   key,value = line.split(':')
+
+  type = "google"
+  if( line.startswith('_') ):
+    type = "battle"
+    key = key[1:]
+    
   if( key.lower() == "tz" ):
     time_zone = value
   else:
     labels.append( key )
-    if( key.lower() == "battle" ):
+    if( type == "battle" ):
       code_lengths.append( "8" )
       max_code_length = 8
       secrets.append( genKeyLine(battle_decode(value)) )

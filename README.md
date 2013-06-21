@@ -1,7 +1,7 @@
 Authenticator
 =============
 
-Forked off 'authenticator' by IEF, which was forked off 'twostep' by pokey9000, this is Authenticator for Pebble, with patches from rigel314 
+Forked off 'authenticator' by IEF, which was forked off 'twostep' by pokey9000, this is Authenticator for Pebble, with patches from rigel314 and cwoac
 
 generating multiple Time-based One-Time Passwords, much like Google Authenticator.
 
@@ -17,7 +17,7 @@ On most sites, when setting up choose 'show key' when presented with the QR code
 3. add it to the end of configuration.txt, following the example in the format 
 label:secret
 
-4. repeat this for all your keys (don't forget to remove the example)
+4. repeat this for all your keys (don't forget to remove the examples)
 
 5. Generate the config by running ./configuration.py
 
@@ -27,3 +27,14 @@ label:secret
 
 The above is assuming you have the Pebble SDK installed and configured to compile watch apps.
 If not, review: http://developer.getpebble.com/1/01_GetStarted/01_Step_2
+
+Battle.net
+----------
+
+Battle.net / guild wars keys are slightly different to handle as they use a variant of the algorithm.
+To mark a code as being a battle.net key, prefix it's label with an underscore ('_' - see the example configuration.txt)
+
+To determine your key, you will need the secret code. You can use [python-bna](https://github.com/Adys/python-bna) to do so.
+Once you have your key installed in bna (either by generating a fresh one or using recover) you can get the value from ~/.config/bna/bna.conf
+
+Note that Blizzard seem to be stricter on the timing than google (I suspect that google actually allow you to use +/- a password) - so if you have issues, check your watch's time is correct.
