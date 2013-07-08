@@ -42,7 +42,7 @@ f.write( "char otplabels[NUM_SECRETS][10] = {\n    " )
 for label in labels:
   f.write( "\"%s\"," % label )
 f.write( "\n};\n" )
-f.write( "unsigned char otpkeys[NUM_SECRETS][16] = {\n    " )
+f.write( "unsigned char otpkeys[NUM_SECRETS][%s] = {\n    " % max(lengths) )
 for secret in secrets:
   f.write( "%s\n" % secret )
 f.write( "};\n" )

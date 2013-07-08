@@ -385,7 +385,7 @@ void handle_init(AppContextRef ctx) {
 	text_layer_init(&token, GRect(10, 60, 144-4 /* width */, 168-44 /* height */));
 	text_layer_set_text_color(&token, GColorWhite);
 	text_layer_set_background_color(&token, GColorClear);
-	text_layer_set_font(&token, fonts_get_system_font(FONT_KEY_GOTHAM_34_MEDIUM_NUMBERS));
+	text_layer_set_font(&token, fonts_get_system_font(FONT_KEY_BITHAM_34_MEDIUM_NUMBERS));
 
 	// Init the second ticker
 	text_layer_init(&ticker, GRect(60, 120, 144-4 /* width */, 168-44 /* height */));
