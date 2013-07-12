@@ -21,7 +21,11 @@ def genKeyLine( code ):
   return "{ " + ', '.join(key_hex) + " },"
 
 
-f = open( 'configuration.txt','r' )
+try:
+  f = open( 'configuration.txt','r' )
+except:
+  print "Unable to open configuration.txt. Cheack README.md for configuration details."
+  sys.exit(1)
 
 for line in f:
   line = line.strip()

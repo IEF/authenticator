@@ -18,3 +18,7 @@ pebble_app.ld
 
 # Ignore other generated files
 serial_dump.txt
+
+# Ignore configuration files that contain secrets
+configuration.txt
+src/configuration.h
