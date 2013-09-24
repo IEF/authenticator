@@ -25,7 +25,7 @@ TextLayer label;
 TextLayer token;
 TextLayer ticker;
 int curToken = 0;
-int tZone;
+float tZone;
 bool changed;
 
 /* from sha1.c from liboauth */
