@@ -34,8 +34,6 @@ for line in f:
   line = line.strip()
   if( line.startswith('#') or not ':' in line ): continue
   key,value = line.split(':')
-  if( key.lower() == "tz" ):
-    time_zone = value
   else:
     labels.append( key )
     secrets.append( genKeyLine(value) )
