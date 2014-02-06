@@ -1,0 +1,22 @@
+{
+  "uuid": "5b59ec4a-8a6b-4ff0-bd80-0038a151cd86",
+  "shortName": "Authenticator",
+  "longName": "Authenticator",
+  "companyName": "pokey9000/IEF/rigel314",
+  "versionCode": 1,
+  "versionLabel": "1.1.0",
+  "watchapp": {
+    "watchface": false
+  },
+  "appKeys": {},
+  "resources": {
+    "media": [
+      {
+        "menuIcon": true,
+        "type": "png",
+        "name": "IMAGE_MENU_ICON",
+        "file": "images/twostep_icon.png"
+      }
+    ]
+  }
+}

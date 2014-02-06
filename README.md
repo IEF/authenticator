@@ -1,7 +1,7 @@
 Authenticator
 =============
 
-Forked off 'authenticator' by IEF, which was forked off 'twostep' by pokey9000, this is Authenticator for Pebble, with patches from rigel314 
+Forked off 'authenticator' by IEF, which was forked off 'twostep' by pokey9000, this is Authenticator for Pebble, with patches from rigel314, updated to PebbleSDK-2.0 by Didier Arenzana.
 
 generating multiple Time-based One-Time Passwords, much like Google Authenticator.
 
@@ -21,11 +21,11 @@ label:secret
 
 5. repeat this for all your keys (don't forget to remove the example)
 
-6. Generate the config by running ./configuration.py
+6. build the application by running pebble build
 
-7. Build and install the application with ./waf build && python httpserver as usual
+7. install by running pebble install
 
 8. Done, you can find 'Authenticator' in your app menu for your Pebble.
 
-The above is assuming you have the Pebble SDK installed and configured to compile watch apps.
-If not, review: http://developer.getpebble.com/1/01_GetStarted/01_Step_2
+The above is assuming you have the Pebble SDK 2.0 installed and configured to compile watch apps.
+If not, review: https://developer.getpebble.com/2/
