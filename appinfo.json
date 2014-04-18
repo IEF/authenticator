@@ -1,0 +1,22 @@
+{
+  "uuid": "74D3FDDC-301B-47C5-82BE-2F5D0BD86244",
+  "shortName": "Authenticator",
+  "longName": "Authenticator",
+  "companyName": "pokey9000/IEF/rigel314/wlcx",
+  "versionCode": 2,
+  "versionLabel": "2.0.0",
+  "watchapp": {
+    "watchface": false
+  },
+  "appKeys": {},
+  "resources": {
+  	"media": [
+  	  {
+  	  	"menuIcon": true,
+  	  	"type": "png",
+  	  	"name": "IMAGE_MENU_ICON",
+  	  	"file": "images/authenticator_icon.png"
+  	  }
+  	]
+  }
+}

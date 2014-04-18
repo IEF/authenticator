@@ -34,17 +34,13 @@ for line in f:
   line = line.strip()
   if( line.startswith('#') or not ':' in line ): continue
   key,value = line.split(':')
-  if( key.lower() == "tz" ):
-    time_zone = value
-  else:
-    labels.append( key )
-    secrets.append( genKeyLine(value) )
+  labels.append( key )
+  secrets.append( genKeyLine(value) )
 f.close()
 
 f = open( "src/configuration.h","w" )
 f.write( "#ifndef _CONFIGURATION_H_\n#define _CONFIGURATION_H_\n" )
 f.write( "#define NUM_SECRETS %i\n" % len(labels) )
-f.write( "#define DEFAULT_TIME_ZONE %s\n" % time_zone )
 f.write( "char otplabels[NUM_SECRETS][10] = {\n    " )
 for label in labels:
   f.write( "\"%s\"," % label )

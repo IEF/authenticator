@@ -1,31 +1,24 @@
 Authenticator
 =============
 
-Forked off 'authenticator' by IEF, which was forked off 'twostep' by pokey9000, this is Authenticator for Pebble, with patches from rigel314 
+Generates multiple Time-based One-Time Passwords, much like Google Authenticator.
 
-generating multiple Time-based One-Time Passwords, much like Google Authenticator.
+You can change the time zone by pressing the select button.
 
-You can change the time zone with the select button.  Then hitting the back button, will resume the app.
+Usage
+-----
 
-To configure the application you need to create a configuration.txt file.
+0. Start a new pebble project with ```pebble new-project authenticator``` , then clone/copy authenticator into the resulting project directory. 
 
 1. Copy configuration-sample.txt to configuration.txt
 
-2. Set your timezone in configuration.txt - it's near the top, labelled 'tz'
+2. Add your OTP secrets, one per line, in the format ```name:secret```
 
-3. Let's say you have secret key AXIMZYJXITSIOIJVNXOE76PEJQ 
-On most sites, when setting up choose 'show key' when presented with the QR code.
+3. Generate configuration.h by running ./configuration.py
 
-4. add it to the end of configuration.txt, following the example in the format 
-label:secret
-
-5. repeat this for all your keys (don't forget to remove the example)
-
-6. Generate the config by running ./configuration.py
-
-7. Build and install the application with ./waf build && python httpserver as usual
-
-8. Done, you can find 'Authenticator' in your app menu for your Pebble.
+4. Build the application with 'pebble build' and copy build/authenticator.pbw to your device
 
 The above is assuming you have the Pebble SDK installed and configured to compile watch apps.
-If not, review: http://developer.getpebble.com/1/01_GetStarted/01_Step_2
+If not, see https://developer.getpebble.com/2/getting-started/
+
+Forked off 'twostep' by pokey9000, with patches from rigel314. Updated for SDK2.0 by wlcx
