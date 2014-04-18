@@ -34,9 +34,8 @@ for line in f:
   line = line.strip()
   if( line.startswith('#') or not ':' in line ): continue
   key,value = line.split(':')
-  else:
-    labels.append( key )
-    secrets.append( genKeyLine(value) )
+  labels.append( key )
+  secrets.append( genKeyLine(value) )
 f.close()
 
 f = open( "src/configuration.h","w" )
