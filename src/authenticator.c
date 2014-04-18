@@ -197,7 +197,7 @@ void main_window_load(Window *main_window) {
 	Layer *main_layer = window_get_root_layer(main_window);
 
 	// Init the label text layer
-	label = text_layer_create(GRect(5, 27, 140, 31));
+	label = text_layer_create(GRect(5, 27, 140, 33));
 	text_layer_set_font(label, fonts_get_system_font(FONT_KEY_GOTHIC_28_BOLD));
 	text_layer_set_text_color(label, GColorWhite);
 	text_layer_set_background_color(label, GColorClear);
